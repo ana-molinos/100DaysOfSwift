@@ -48,5 +48,13 @@ class ViewController: UITableViewController {
         
         return cell
     }
+    
+    // MARK: - Table View Delegate
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = DetailViewController()
+        
+        vc.selectedImage = pictures[indexPath.row] // passa o nome da imagem selecionado para o detailvc
+        navigationController?.pushViewController(vc, animated: true) // empilha a view de detalhes
+    }
 }
 
