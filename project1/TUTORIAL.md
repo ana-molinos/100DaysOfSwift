@@ -248,105 +248,64 @@ Apple recomenda títulos grandes apenas na primeira tela do app — telas de con
 
 ---
 
-## Dia 18 — Desafios e revisão
+## Dia 18 — Wrap up
 
-> **Nota:** Não consegui acessar os subtópicos do Dia 18. Compartilhe o link dos subtópicos para refinamento.
-
-### Subtópico 1 — Revisão do projeto
-
-Antes de encarar os desafios, certifique-se de que o app funciona corretamente:
-
-1. A lista exibe os 10 arquivos `nssl*` corretamente?
-2. Ao tocar em um item, o `DetailViewController` abre com a imagem correta?
-3. O botão "Voltar" funciona e retorna à lista?
-4. A imagem é exibida com proporção correta em diferentes tamanhos de tela?
-
-Se tudo estiver funcionando, você está pronto para os desafios.
+O Dia 18 é dedicado à revisão do que foi aprendido e aos três desafios do projeto. O curso não entrega as respostas — o objetivo é que você escreva o código por conta própria. Como diz o Paul Hudson: "não há aprendizado sem esforço". Tente resolver cada desafio antes de ler as dicas.
 
 ---
 
-### Subtópico 2 — Desafio 1: Ordenar as imagens alfabeticamente
+### Subtópico 1 — Wrap up (Revisão e desafios)
 
-Atualmente as imagens aparecem na ordem em que o `FileManager` as retorna, que pode variar. O desafio é ordenar a lista de forma previsível.
+Antes de avançar, confirme que o app está funcionando corretamente: a lista exibe os arquivos `nssl*`, tocar em um item abre o `DetailViewController` com a imagem correta, o botão "Voltar" funciona, e a navigation bar some e volta ao tocar na tela do detalhe.
 
-**Pista de sintaxe:**
-
-```swift
-pictures.sort()
-```
-
-Adicione essa linha no `viewDidLoad()` do `ViewController`, logo após o loop que preenche o array `pictures`. O método `sort()` modifica o array in-place em ordem crescente. Como os nomes dos arquivos são strings, a ordenação será alfabética automaticamente.
-
-**Por que isso importa?** Consistência. O usuário espera ver uma ordem previsível, não dependente do sistema de arquivos.
+O curso lista tudo que foi coberto neste projeto: table views, image views, bundles, `FileManager`, typecasting, view controllers, Auto Layout, `UIImage`, e mais. Se algum desses conceitos ainda parecer nebuloso, é normal — o aprendizado acontece por repetição, e você vai encontrar todos eles de novo nos próximos projetos.
 
 ---
 
-### Subtópico 3 — Desafio 2: Mostrar a posição da imagem como subtítulo
+**Desafio 1 — Exibir as imagens em ordem alfabética**
 
-Quando o usuário está visualizando uma imagem, é útil saber que está na "imagem 3 de 10", por exemplo. Esse número deve aparecer na barra de navegação do `DetailViewController`.
+As imagens podem ou não estar ordenadas dependendo do sistema de arquivos — o comportamento do `FileManager` não é garantido. O desafio é garantir que estejam sempre em ordem.
 
-**Pista de sintaxe:**
-
-Para isso funcionar, o `DetailViewController` precisa receber não só o nome da imagem, mas também a posição dela na lista. Você precisará adicionar uma segunda propriedade:
-
-```swift
-var selectedImageNumber: Int = 0
-var totalImages: Int = 0
-```
-
-E no `ViewController`, ao navegar:
-
-```swift
-vc.selectedImageNumber = indexPath.row + 1
-vc.totalImages = pictures.count
-```
-
-No `viewDidLoad()` do `DetailViewController`, monte o título:
-
-```swift
-title = "Imagem \(selectedImageNumber) de \(totalImages)"
-```
+Você já viu que arrays têm um método `sort()`. A questão aqui não é qual método usar, mas *onde* chamá-lo. Você poderia ordená-las a cada iteração do loop, mas isso é trabalho desnecessário. Pense: qual é o momento mais eficiente para ordenar — depois que todas as imagens já foram carregadas no array?
 
 ---
 
-### Subtópico 4 — Desafio 3: Compartilhar imagens com `UIActivityViewController`
+**Desafio 2 — Mostrar "Picture X of Y" no título do detalhe**
 
-O `UIActivityViewController` é o painel de compartilhamento nativo do iOS — o mesmo que aparece quando você compartilha uma foto no Photos. Com poucas linhas, você pode adicioná-lo ao seu app.
+Em vez de mostrar apenas o nome do arquivo como título, o desafio é exibir algo como "Picture 3 of 10" — onde 3 é a posição da imagem na lista e 10 é o total.
 
-O fluxo é: o usuário toca em um botão de compartilhar → o painel aparece com opções (AirDrop, salvar na galeria, enviar por mensagem, etc.).
+Para isso, o `DetailViewController` precisa receber duas informações extras além do nome da imagem. O padrão já é conhecido: criar propriedades no destino e preenchê-las antes do `pushViewController`.
 
-**Pista de sintaxe:**
-
-Primeiro, adicione um botão na barra de navegação do `DetailViewController`. Isso deve ser feito no `viewDidLoad()`:
+O curso sugere:
 
 ```swift
-navigationItem.rightBarButtonItem = UIBarButtonItem(
-    barButtonSystemItem: .action,
-    target: self,
-    action: #selector(shareTapped)
-)
+var selectedPictureNumber = 0
+var totalPictures = 0
 ```
 
-`.action` é o ícone padrão de compartilhamento (a caixa com seta para cima). O `target: self` e `action: #selector(shareTapped)` definem que o método `shareTapped` neste mesmo objeto será chamado quando o botão for tocado.
+No `ViewController`, dentro do `didSelectRowAt`, você já passa `pictures[indexPath.row]` para `selectedImage`. Use o mesmo `indexPath.row` para `selectedPictureNumber` — mas lembre-se que arrays começam em 0 e o usuário espera contar a partir de 1.
 
-Agora implemente o método:
+No `viewDidLoad()` do `DetailViewController`, monte o título com interpolação de string. Você já usou isso antes:
 
 ```swift
-@objc func shareTapped() {
-    guard let image = imageView.image?.jpegData(compressionQuality: 0.8) else {
-        print("Nenhuma imagem encontrada")
-        return
-    }
-
-    let vc = UIActivityViewController(activityItems: [image], applicationActivities: [])
-    vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
-    present(vc, animated: true)
-}
+title = "Este valor é \(minhaVariavel)"
 ```
 
-**O que é `@objc`?** O sistema de ação/alvo do UIKit é baseado no Objective-C. O `@objc` expõe o método Swift para esse sistema. Sempre que usar `#selector`, o método referenciado precisa de `@objc`.
+Como ficaria para combinar `selectedPictureNumber` e `totalPictures` numa string?
 
-**O que é `popoverPresentationController?.barButtonItem`?** No iPad, `UIActivityViewController` aparece como um popover (uma janela flutuante). Você precisa dizer de onde esse popover deve surgir — neste caso, do botão de compartilhar. No iPhone essa linha não tem efeito, mas é necessária para o iPad funcionar corretamente.
+---
+
+**Desafio 3 — Aumentar o tamanho da fonte nas células**
+
+O curso original resolve isso no Interface Builder — selecionando o label da célula e ajustando o tamanho da fonte nos atributos. Em view code, fazemos isso diretamente no `cellForRowAt`, onde a célula é configurada.
+
+A `UITableViewCell` com estilo `Basic` tem uma propriedade `textLabel` com um objeto `UILabel` dentro. Um `UILabel` tem uma propriedade `font` do tipo `UIFont`. Explore o que `UIFont` oferece para definir uma fonte com tamanho customizado — experimente valores diferentes e veja o que fica bom visualmente.
+
+---
+
+**Uma nota sobre as dicas**
+
+O curso é explícito: tente os desafios por pelo menos 30 minutos antes de olhar as dicas. Cada tentativa errada é aprendizado — você vai lembrar muito mais do caminho correto por ter percorrido os errados primeiro. As dicas acima existem para desbloqueá-la se travar, não para substituir o esforço.
 
 ---
 
@@ -370,4 +329,4 @@ Após completar os desafios do Dia 18, o projeto está concluído. Os próximos 
 ---
 
 *Tutorial gerado para o curso 100 Days of Swift — Projeto 1, adaptado para View Code sem Interface Builder.*
-*Dias 16 e 17 revisados com o conteúdo real do curso. Dia 18 será refinado após execução de `./fetch_lesson.sh 18 1`.*
+*Conteúdo dos dias 16, 17 e 18 revisado com base no conteúdo real do site.*

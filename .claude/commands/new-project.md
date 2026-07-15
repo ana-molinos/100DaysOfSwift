@@ -21,6 +21,17 @@ Your job is to:
 - Write in Portuguese (the user's native language).
 - Do not generate complete, copy-paste-ready implementations. Use illustrative snippets only.
 
+### Rhythm and depth — follow Paul Hudson's teaching style
+
+This is the most important rule. The tutorial must replicate the same progression of reasoning that Paul Hudson uses in the original course — not just cover the same topics, but teach them the same way:
+
+- **Why before how.** Before showing any code or instruction, explain the problem being solved and why the chosen approach makes sense. Never introduce a method or type without first motivating its existence.
+- **Detail every new line.** When a new concept, method, or syntax appears for the first time, break it down piece by piece — what each part means, what it does, and why it is written that way. Do not assume the reader will infer meaning from context.
+- **Preserve the original sequence of reasoning.** Follow the same order the course uses to build up understanding — if the course explains concept A, then uses it to motivate concept B, the tutorial must do the same. Do not reorder or compress steps.
+- **Acknowledge what is genuinely difficult.** When the course flags something as confusing (optionals, `@objc`, `IndexPath`, etc.), match that candor — acknowledge the difficulty and give it the same space the course does.
+- **Adapt Interface Builder steps, don't skip them.** When the course spends time explaining something done visually in Interface Builder (connecting outlets, setting identifiers, configuring cells), do not simply say "we do this in code instead." Explain what that step was accomplishing conceptually, then show the view code equivalent with the same level of detail.
+- **Use the course's own explanations as a reference.** Where the original text explains something well, paraphrase it faithfully rather than replacing it with a shorter summary. Compression loses nuance that matters for learning.
+
 ## Rules for the README entry
 
 - Write in English.
