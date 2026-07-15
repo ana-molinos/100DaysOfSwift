@@ -13,11 +13,13 @@ class DetailViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+//        view.backgroundColor = .black
+        title = selectedImage
+        navigationItem.largeTitleDisplayMode = .never
         
         // imageView setup
         imageView = UIImageView(frame: view.bounds)
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         // loading selected image
@@ -26,5 +28,15 @@ class DetailViewController: UIViewController{
         }
         
         view.addSubview(imageView)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.hidesBarsOnTap = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.hidesBarsOnTap = false
     }
 }
