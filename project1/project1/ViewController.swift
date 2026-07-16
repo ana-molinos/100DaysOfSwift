@@ -24,6 +24,8 @@ class ViewController: UITableViewController {
             }
         }
         
+        pictures.sort()
+        
         print(self.pictures)
         
         title = "Storm View"
@@ -45,6 +47,7 @@ class ViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Picture", for: indexPath)
         
         cell.textLabel?.text = pictures[indexPath.row]
+        cell.textLabel?.font = UIFont.systemFont(ofSize: 20)
         cell.accessoryType = .disclosureIndicator
         
         return cell
@@ -55,6 +58,8 @@ class ViewController: UITableViewController {
         let vc = DetailViewController()
         
         vc.selectedImage = pictures[indexPath.row] // passa o nome da imagem selecionado para o detailvc
+        vc.totalOfImages = pictures.count
+        vc.actualImage = indexPath.row + 1
         navigationController?.pushViewController(vc, animated: true) // empilha a view de detalhes
     }
 }
